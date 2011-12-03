@@ -35,6 +35,15 @@ $wgHooks['ParserFirstCallInit'][] = 'setupEmbedSandbox';
 $wgAutoloadClasses['EmbedSandboxFunction'] =
 	dirname(__FILE__) . '/EmbedSandboxFunction.php';
 
+$wgResourceModules['ext.embedsandbox.host'] = array(
+	'localBasePath' => dirname( __FILE__ ) . '/modules',
+	'remoteExtPath' => 'EmbedSandbox/modules',
+	'group' => 'ext.embedsandbox',
+	'scripts' => array(
+		'ext.embedsandbox.host.js',
+	)
+);
+
 function setupEmbedSandbox( $parser ) {
 	$parser->setHook( 'embedsandbox', array( EmbedSandboxFunction, 'embedSandboxTag') );
 	return true;
