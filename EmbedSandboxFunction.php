@@ -39,7 +39,10 @@ class EmbedSandboxFunction {
 			'src' => $src,
 			'width' => 640,
 			'height' => 480,
-			'data-embedsandbox' => $content
+			'data-embedsandbox' => $content,
+			// onload attribute to catch frames that load before
+			// we get our event handlers set up
+			'onload' => 'this.embedSandboxLoaded=true'
 		));
 	}
 

@@ -21,7 +21,21 @@ function sendEmbedMessage(iframe, msg) {
 }
 
 $('iframe.mw-embedsandbox-embedded').each(function() {
-	activateEmbed(this);
+	var iframe = this,
+		$iframe = $(this);
+	// Wait until the iframe has fully loaded before
+	// sending it data, otherwise it may miss our message.
+	if (iframe.embedSandboxLoaded) {
+		console.log('already loaded, activating');
+		activateEmbed(iframe);
+	} else {
+		console.log('binding load...');
+		$iframe.bind('load', function() {
+			console.log('loaded');
+			activateEmbed(iframe);
+			$iframe.bind('load', null);
+		});
+	}
 });
 
 });
