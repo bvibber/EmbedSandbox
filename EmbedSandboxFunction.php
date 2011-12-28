@@ -30,20 +30,40 @@ class EmbedSandboxFunction {
 		}
 
 		$parser->getOutput()->addModules( 'ext.embedsandbox.host' );
-		return self::embedResult( $url, $content );
+		return self::embedResult( $url, $content, $args );
 	}
 
-	protected static function embedResult( $src, $content ) {
+	protected static function embedResult( $src, $content, $params ) {
+		$width = self::validatePositiveInt( $params, 'width', 640 );
+		$height = self::validatePositiveInt( $params, 'height', 480 );
 		return Html::element('iframe', array(
 			'class' => 'mw-embedsandbox-embedded',
 			'src' => $src,
-			'width' => 640,
-			'height' => 480,
+			'width' => $width,
+			'height' => $height,
 			'data-embedsandbox' => $content,
 			// onload attribute to catch frames that load before
 			// we get our event handlers set up
 			'onload' => 'this.embedSandboxLoaded=true'
 		));
+	}
+	
+	/**
+	 * Get a guaranteed positive integer, or the default value, from the param map.
+	 *
+	 * @param array $params
+	 * @param string $name
+	 * @param int $default
+	 * @return int
+	 */
+	protected static function validatePositiveInt( $params, $name, $default ) {
+		if( isset( $params[$name] ) ) {
+			$val = intval( $params[$name] );
+			if( $val > 0 ) {
+				return $val;
+			}
+		}
+		return intval( $default );
 	}
 
 	protected static function errorResult( Message $msg ) {
